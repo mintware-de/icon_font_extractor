@@ -43,6 +43,7 @@ flutter:
 icon_fonts:
   - family: MaterialIcons        # must match a family under flutter.fonts
     outputFile: lib/material_icons.g.dart
+    # outputFamily: MaterialSymbols  # optional: overrides fontFamily in generated IconData
 ```
 
 

@@ -82,6 +82,7 @@ class IconFontGenerator {
     final source = emitDartSource(
       familyName: font.familyName,
       entries: entries,
+      fontFamily: font.outputFamily,
     );
 
     final outPath = config.resolve(font.outputPath);

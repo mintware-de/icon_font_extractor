@@ -8,11 +8,16 @@ class IconFontConfig {
     required this.familyName,
     required this.outputPath,
     required this.assetPaths,
+    this.outputFamily,
   });
 
   final String familyName;
   final String outputPath;
   final List<String> assetPaths;
+
+  /// When set, overrides the `fontFamily` value written into every generated
+  /// `IconData` constant. Defaults to [familyName] when null.
+  final String? outputFamily;
 }
 
 class PubspecConfig {
@@ -110,8 +115,19 @@ List<IconFontConfig> _buildFontConfigs(
         'declared under flutter.fonts in pubspec.yaml.',
       );
     }
+    final outputFamily = entry['outputFamily'];
+    if (outputFamily != null && outputFamily is! String) {
+      throw FormatException(
+        '"icon_fonts" entry "outputFamily" must be a string, got $outputFamily',
+      );
+    }
     configs.add(
-      IconFontConfig(familyName: family, outputPath: outputFile, assetPaths: assets),
+      IconFontConfig(
+        familyName: family,
+        outputPath: outputFile,
+        assetPaths: assets,
+        outputFamily: outputFamily as String?,
+      ),
     );
   }
   return configs;

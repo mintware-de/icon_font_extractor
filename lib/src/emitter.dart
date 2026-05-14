@@ -15,7 +15,9 @@ class GeneratedIcon {
 String emitDartSource({
   required String familyName,
   required Iterable<({String ligature, int codepoint})> entries,
+  String? fontFamily,
 }) {
+  final resolvedFontFamily = fontFamily ?? familyName;
   final sortedEntries = entries.toList()
     ..sort((a, b) => a.ligature.compareTo(b.ligature));
   final rawNames = sortedEntries
@@ -55,7 +57,7 @@ String emitDartSource({
       ..writeln('  /// Ligature: `${_escapeForDocComment(icon.ligature)}`')
       ..writeln(
         "  static const IconData ${icon.identifier} = "
-        "IconData(0x$hex, fontFamily: '$familyName');",
+        "IconData(0x$hex, fontFamily: '$resolvedFontFamily');",
       )
       ..writeln();
   }
