@@ -46,6 +46,7 @@ icon_fonts:
     # outputFamily: MaterialSymbols  # optional: overrides fontFamily in generated IconData
     # iconPrefix: icn               # optional: identifier prefix (default: icn)
     # naming: snake                # optional: snake (default), pascal, camel, keep
+    # useLigatures: true          # optional: true (default) = GSUB ligatures, false = cmap + post table
 ```
 
 
@@ -114,11 +115,20 @@ Additional sanitisation applied for all strategies:
 
 ## How codepoints are chosen
 
-For each ligature, the generator looks up the substituted glyph and finds the
-codepoint that maps to it via the font's `cmap` table, preferring the
-Unicode Private Use Areas. If a glyph is unreachable from `cmap`, the
-generator emits a warning and skips that ligature (the `Icon` widget can only
-render codepoints that are present in the font's `cmap`).
+### `useLigatures: true` (default)
+
+The generator reads the font's `GSUB` table (LookupType 4 ligature substitution) to map multi-character ligature strings to glyph IDs, then finds each glyph's codepoint via `cmap`, preferring Unicode Private Use Areas. This is the best choice for icon fonts that encode icon names as OpenType ligatures (e.g. Material Icons, Font Awesome).
+
+### `useLigatures: false`
+
+Use this for fonts that have no `GSUB` ligatures but expose icon names via the `post` table. The generator iterates every entry in `cmap`, looks up the glyph name from the `post` table, and uses that as the icon identifier. The same naming strategies apply. Glyph names in the standard placeholder set (`.notdef`, `space`, etc.) are skipped. If no `post` table is present, a hex-based fallback name (`uE001`) is used.
+
+```yaml
+icon_fonts:
+  - family: MyCustomIcons
+    outputFile: lib/my_custom_icons.g.dart
+    useLigatures: false
+```
 
 ## Limitations
 

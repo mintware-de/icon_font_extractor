@@ -13,8 +13,10 @@ class IconFontConfig {
     this.outputFamily,
     String? iconPrefix,
     NamingStrategy? namingStrategy,
+    bool? useLigatures,
   })  : iconPrefix = iconPrefix ?? 'icn',
-        namingStrategy = namingStrategy ?? const SnakeNamingStrategy();
+        namingStrategy = namingStrategy ?? const SnakeNamingStrategy(),
+        useLigatures = useLigatures ?? true;
 
   final String familyName;
   final String outputPath;
@@ -28,8 +30,14 @@ class IconFontConfig {
   final String iconPrefix;
 
   /// Strategy used to convert ligature names to Dart identifiers.
-  /// Defaults to [PascalNamingStrategy].
+  /// Defaults to [SnakeNamingStrategy].
   final NamingStrategy namingStrategy;
+
+  /// When `true` (default), icon names are read from the GSUB ligature table.
+  /// When `false`, names are read from the `post` table glyph names, keyed by
+  /// codepoints in the `cmap` table. Use this for fonts that have no ligature
+  /// table but carry meaningful glyph names.
+  final bool useLigatures;
 }
 
 class PubspecConfig {
@@ -156,6 +164,12 @@ List<IconFontConfig> _buildFontConfigs(
         '"icon_fonts" entry "naming": ${e.message}',
       );
     }
+    final useLigaturesValue = entry['useLigatures'];
+    if (useLigaturesValue != null && useLigaturesValue is! bool) {
+      throw FormatException(
+        '"icon_fonts" entry "useLigatures" must be a boolean, got $useLigaturesValue',
+      );
+    }
     configs.add(
       IconFontConfig(
         familyName: family,
@@ -164,6 +178,7 @@ List<IconFontConfig> _buildFontConfigs(
         outputFamily: outputFamily as String?,
         iconPrefix: iconPrefix as String?,
         namingStrategy: namingStrategy,
+        useLigatures: useLigaturesValue as bool?,
       ),
     );
   }
