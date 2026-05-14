@@ -3,13 +3,18 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
+import 'naming_strategy.dart';
+
 class IconFontConfig {
   IconFontConfig({
     required this.familyName,
     required this.outputPath,
     required this.assetPaths,
     this.outputFamily,
-  });
+    String? iconPrefix,
+    NamingStrategy? namingStrategy,
+  })  : iconPrefix = iconPrefix ?? 'icn',
+        namingStrategy = namingStrategy ?? const SnakeNamingStrategy();
 
   final String familyName;
   final String outputPath;
@@ -18,6 +23,13 @@ class IconFontConfig {
   /// When set, overrides the `fontFamily` value written into every generated
   /// `IconData` constant. Defaults to [familyName] when null.
   final String? outputFamily;
+
+  /// Prefix prepended to every generated identifier. Defaults to `icn`.
+  final String iconPrefix;
+
+  /// Strategy used to convert ligature names to Dart identifiers.
+  /// Defaults to [PascalNamingStrategy].
+  final NamingStrategy namingStrategy;
 }
 
 class PubspecConfig {
@@ -121,12 +133,37 @@ List<IconFontConfig> _buildFontConfigs(
         '"icon_fonts" entry "outputFamily" must be a string, got $outputFamily',
       );
     }
+    final iconPrefix = entry['iconPrefix'];
+    if (iconPrefix != null && iconPrefix is! String) {
+      throw FormatException(
+        '"icon_fonts" entry "iconPrefix" must be a string, got $iconPrefix',
+      );
+    }
+    final namingValue = entry['naming'];
+    if (namingValue != null && namingValue is! String) {
+      throw FormatException(
+        '"icon_fonts" entry "naming" must be a string '
+        '(pascal, camel, snake, or keep), got $namingValue',
+      );
+    }
+    final NamingStrategy? namingStrategy;
+    try {
+      namingStrategy = namingValue != null
+          ? namingStrategyFromString(namingValue as String)
+          : null;
+    } on FormatException catch (e) {
+      throw FormatException(
+        '"icon_fonts" entry "naming": ${e.message}',
+      );
+    }
     configs.add(
       IconFontConfig(
         familyName: family,
         outputPath: outputFile,
         assetPaths: assets,
         outputFamily: outputFamily as String?,
+        iconPrefix: iconPrefix as String?,
+        namingStrategy: namingStrategy,
       ),
     );
   }

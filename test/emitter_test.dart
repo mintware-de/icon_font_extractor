@@ -20,18 +20,18 @@ void main() {
       expect(
         src,
         contains(
-          "static const IconData icnHome = IconData(0xE900, fontFamily: 'MyIcons');",
+          "static const IconData icn_home = IconData(0xE900, fontFamily: 'MyIcons');",
         ),
       );
       expect(
         src,
         contains(
-          "static const IconData icnSearch = IconData(0xE901, fontFamily: 'MyIcons');",
+          "static const IconData icn_search = IconData(0xE901, fontFamily: 'MyIcons');",
         ),
       );
 
       // Sorted: home appears before search.
-      expect(src.indexOf('icnHome'), lessThan(src.indexOf('icnSearch')));
+      expect(src.indexOf('icn_home'), lessThan(src.indexOf('icn_search')));
     });
 
     test('disambiguates colliding identifiers', () {
@@ -43,10 +43,10 @@ void main() {
           (ligature: 'home_', codepoint: 0xE003),
         ],
       );
-      // All three sanitise to icnHome; later ones get suffixed.
-      expect(src, contains('icnHome '));
-      expect(src, contains('icnHome2'));
-      expect(src, contains('icnHome3'));
+      // All three sanitise to icn_home; later ones get suffixed.
+      expect(src, contains('icn_home '));
+      expect(src, contains('icn_home2'));
+      expect(src, contains('icn_home3'));
     });
 
     test('produces empty class when no entries', () {

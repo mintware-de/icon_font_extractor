@@ -44,6 +44,8 @@ icon_fonts:
   - family: MaterialIcons        # must match a family under flutter.fonts
     outputFile: lib/material_icons.g.dart
     # outputFamily: MaterialSymbols  # optional: overrides fontFamily in generated IconData
+    # iconPrefix: icn               # optional: identifier prefix (default: icn)
+    # naming: snake                # optional: snake (default), pascal, camel, keep
 ```
 
 
@@ -93,12 +95,20 @@ that accepts `IconData` (`Icon`, `IconButton`, `BottomNavigationBarItem`, …).
 
 ## Naming rules
 
-Each ligature is sanitised into a Dart identifier:
+The `iconPrefix` key (default `icn`) is prepended to every identifier. The
+`naming` key controls how ligature words are cased:
+
+| Strategy | Example ligature | Result (prefix `icn`) |
+| --- | --- | --- |
+| `snake` *(default)* | `arrow_back_ios` | `icn_arrow_back_ios` |
+| `pascal` | `arrow_back_ios` | `IcnArrowBackIos` |
+| `camel` | `arrow_back_ios` | `icnArrowBackIos` |
+| `keep` | `arrowBack_iOS` | `icnarrowBack_iOS` |
+
+Additional sanitisation applied for all strategies:
 
 * Whitespace is removed.
 * Characters that are not valid in a Dart identifier are replaced with `_`.
-* The remaining text is PascalCased on `_` boundaries.
-* The fixed prefix `icn` is added (e.g., `home_outlined` → `icnHomeOutlined`).
 * Duplicate identifiers are disambiguated with a numeric suffix
   (`icnHome`, `icnHome2`, `icnHome3`, …).
 

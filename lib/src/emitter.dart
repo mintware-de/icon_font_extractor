@@ -1,4 +1,5 @@
 import 'naming.dart';
+import 'naming_strategy.dart';
 
 class GeneratedIcon {
   GeneratedIcon({
@@ -16,12 +17,14 @@ String emitDartSource({
   required String familyName,
   required Iterable<({String ligature, int codepoint})> entries,
   String? fontFamily,
+  String iconPrefix = 'icn',
+  NamingStrategy namingStrategy = const SnakeNamingStrategy(),
 }) {
   final resolvedFontFamily = fontFamily ?? familyName;
   final sortedEntries = entries.toList()
     ..sort((a, b) => a.ligature.compareTo(b.ligature));
   final rawNames = sortedEntries
-      .map((e) => toIcnIdentifier(e.ligature))
+      .map((e) => namingStrategy.toIdentifier(e.ligature, iconPrefix))
       .toList();
   final identifiers = deduplicate(rawNames);
 

@@ -83,6 +83,8 @@ class IconFontGenerator {
       familyName: font.familyName,
       entries: entries,
       fontFamily: font.outputFamily,
+      iconPrefix: font.iconPrefix,
+      namingStrategy: font.namingStrategy,
     );
 
     final outPath = config.resolve(font.outputPath);

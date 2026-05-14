@@ -1,35 +1,11 @@
-/// Sanitises a ligature string into a Dart identifier:
-///   * Whitespace is removed.
-///   * Characters invalid in Dart identifiers are replaced with `_`.
-///   * The remainder is PascalCased on word boundaries.
-///   * The fixed prefix `icn` is prepended.
-String toIcnIdentifier(String ligature) {
-  final stripped = ligature.replaceAll(RegExp(r'\s+'), '');
-  final cleaned = stripped.replaceAllMapped(
-    RegExp(r'[^A-Za-z0-9_]'),
-    (_) => '_',
-  );
+import 'naming_strategy.dart';
 
-  final parts = cleaned
-      .split(RegExp(r'[_]+'))
-      .where((p) => p.isNotEmpty)
-      .toList();
-
-  final pascal = StringBuffer();
-  for (final part in parts) {
-    pascal.write(part[0].toUpperCase());
-    if (part.length > 1) pascal.write(part.substring(1));
-  }
-
-  var name = 'icn$pascal';
-  if (name == 'icn') {
-    name = 'icnEmpty';
-  }
-  if (RegExp(r'^[0-9]').hasMatch(name)) {
-    name = '_$name';
-  }
-  return name;
-}
+/// Sanitises a ligature string into a Dart identifier using the pascal
+/// naming strategy with the default `icn` prefix.
+///
+/// Kept for backward compatibility; prefer [NamingStrategy.toIdentifier].
+String toIcnIdentifier(String ligature) =>
+    const PascalNamingStrategy().toIdentifier(ligature, 'icn');
 
 /// Deduplicates identifiers in stable order by appending `2`, `3`, …
 List<String> deduplicate(Iterable<String> names) {
