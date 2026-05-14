@@ -1,0 +1,30 @@
+name: icon_font_extractor_example
+description: Example app for the icon_font_extractor package.
+publish_to: "none"
+version: 0.0.1
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  icon_font_extractor:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: MaterialIcons
+      fonts:
+        - asset: assets/fonts/MaterialIcons-Regular.otf
+
+# Run `icon_font_extractor generate` from this directory after
+# `flutter pub get` to (re)generate `lib/material_icons.dart`.
+icon_fonts:
+  MaterialIcons: lib/material_icons.g.dart
