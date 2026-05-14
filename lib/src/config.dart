@@ -41,18 +41,21 @@ class PubspecConfig {
   String resolve(String relative) => p.normalize(p.join(pubspecDir, relative));
 }
 
-/// Extracts and validates the top-level `icon_fonts:` mapping.
-YamlMap _extractIconFonts(YamlMap yaml) {
+/// Extracts and validates the top-level `icon_fonts:` list.
+YamlList _extractIconFonts(YamlMap yaml) {
   final iconFonts = yaml['icon_fonts'];
   if (iconFonts == null) {
     throw const FormatException(
       'No top-level "icon_fonts:" key found in pubspec.yaml. '
-      'Add e.g.\n  icon_fonts:\n    MyIcons: lib/my_icons.dart',
+      'Add e.g.\n'
+      '  icon_fonts:\n'
+      '    - family: MyIcons\n'
+      '      outputFile: lib/my_icons.g.dart',
     );
   }
-  if (iconFonts is! YamlMap) {
+  if (iconFonts is! YamlList) {
     throw const FormatException(
-      '"icon_fonts:" must be a mapping of family name -> output path.',
+      '"icon_fonts:" must be a list of objects with "family" and "outputFile" keys.',
     );
   }
   return iconFonts;
@@ -83,26 +86,33 @@ Map<String, List<String>> _extractFamilyAssets(YamlMap yaml) {
 /// Builds an [IconFontConfig] for each entry in [iconFonts], cross-referencing
 /// [familyToAssets] to resolve asset file paths.
 List<IconFontConfig> _buildFontConfigs(
-  YamlMap iconFonts,
+  YamlList iconFonts,
   Map<String, List<String>> familyToAssets,
 ) {
   final configs = <IconFontConfig>[];
-  iconFonts.forEach((key, value) {
-    if (key is! String || value is! String) {
+  for (final entry in iconFonts) {
+    if (entry is! YamlMap) {
       throw FormatException(
-        '"icon_fonts" entries must be String -> String, got $key -> $value',
+        '"icon_fonts" entries must be objects with "family" and "outputFile" keys, got $entry',
       );
     }
-    final assets = familyToAssets[key];
+    final family = entry['family'];
+    final outputFile = entry['outputFile'];
+    if (family is! String || outputFile is! String) {
+      throw FormatException(
+        '"icon_fonts" entry must have string "family" and "outputFile" keys, got $entry',
+      );
+    }
+    final assets = familyToAssets[family];
     if (assets == null || assets.isEmpty) {
       throw FormatException(
-        'icon_fonts contains "$key" but no matching font family is '
+        'icon_fonts contains "$family" but no matching font family is '
         'declared under flutter.fonts in pubspec.yaml.',
       );
     }
     configs.add(
-      IconFontConfig(familyName: key, outputPath: value, assetPaths: assets),
+      IconFontConfig(familyName: family, outputPath: outputFile, assetPaths: assets),
     );
-  });
+  }
   return configs;
 }

@@ -41,7 +41,8 @@ flutter:
 # Run `icon_font_extractor generate` from this directory after
 # `flutter pub get` to (re)generate `lib/material_icons.dart`.
 icon_fonts:
-  MaterialIcons: lib/material_icons.g.dart # Key = family name from above, value = generated file 
+  - family: MaterialIcons        # must match a family under flutter.fonts
+    outputFile: lib/material_icons.g.dart
 ```
 
 
