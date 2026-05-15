@@ -37,10 +37,7 @@ List<String> _splitToWords(String s) {
         RegExp(r'([A-Z]+)([A-Z][a-z])'),
         (m) => '${m[1]}_${m[2]}',
       )
-      .replaceAllMapped(
-        RegExp(r'([a-z0-9])([A-Z])'),
-        (m) => '${m[1]}_${m[2]}',
-      );
+      .replaceAllMapped(RegExp(r'([a-z0-9])([A-Z])'), (m) => '${m[1]}_${m[2]}');
   return withBoundaries
       .split(RegExp(r'_+'))
       .where((p) => p.isNotEmpty)
@@ -64,7 +61,10 @@ String _guardDigit(String name) =>
 List<String> _allWords(String prefix, String ligature) {
   final pw = _splitToWords(prefix);
   final lw = _splitToWords(ligature);
-  return [...pw, ...(lw.isEmpty ? ['empty'] : lw)];
+  return [
+    ...pw,
+    ...(lw.isEmpty ? ['empty'] : lw),
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -75,6 +75,7 @@ List<String> _allWords(String prefix, String ligature) {
 ///
 /// Example: `arrow_back_ios` + prefix `icn` → `IcnArrowBackIos`
 class PascalNamingStrategy implements NamingStrategy {
+  /// Constructor
   const PascalNamingStrategy();
 
   @override
@@ -90,6 +91,7 @@ class PascalNamingStrategy implements NamingStrategy {
 ///
 /// Example: `arrow_back_ios` + prefix `icn` → `icnArrowBackIos`
 class CamelNamingStrategy implements NamingStrategy {
+  /// Constructor
   const CamelNamingStrategy();
 
   @override
@@ -106,6 +108,7 @@ class CamelNamingStrategy implements NamingStrategy {
 ///
 /// Example: `arrow_back_ios` + prefix `icn` → `icn_arrow_back_ios`
 class SnakeNamingStrategy implements NamingStrategy {
+  /// Constructor
   const SnakeNamingStrategy();
 
   @override
@@ -121,6 +124,7 @@ class SnakeNamingStrategy implements NamingStrategy {
 ///
 /// Example: `arrow_back_iOS` + prefix `icn` → `icnarrow_back_iOS`
 class KeepNamingStrategy implements NamingStrategy {
+  /// Constructor
   const KeepNamingStrategy();
 
   @override

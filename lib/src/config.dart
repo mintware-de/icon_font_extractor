@@ -5,7 +5,9 @@ import 'package:yaml/yaml.dart';
 
 import 'naming_strategy.dart';
 
+/// Representation of the configuration
 class IconFontConfig {
+  /// Constructor
   IconFontConfig({
     required this.familyName,
     required this.outputPath,
@@ -14,12 +16,17 @@ class IconFontConfig {
     String? iconPrefix,
     NamingStrategy? namingStrategy,
     bool? useLigatures,
-  })  : iconPrefix = iconPrefix ?? 'icn',
-        namingStrategy = namingStrategy ?? const SnakeNamingStrategy(),
-        useLigatures = useLigatures ?? true;
+  }) : iconPrefix = iconPrefix ?? 'icn',
+       namingStrategy = namingStrategy ?? const SnakeNamingStrategy(),
+       useLigatures = useLigatures ?? true;
 
+  /// The font family of the icons should be extracted
   final String familyName;
+
+  /// The output file for the constants
   final String outputPath;
+
+  /// The paths to the assets
   final List<String> assetPaths;
 
   /// When set, overrides the `fontFamily` value written into every generated
@@ -40,9 +47,11 @@ class IconFontConfig {
   final bool useLigatures;
 }
 
+/// A representation of the pubspec.yaml
 class PubspecConfig {
   PubspecConfig._(this.pubspecDir, this.fonts);
 
+  /// Loads the config
   factory PubspecConfig.load(String pubspecPath) {
     final file = File(pubspecPath);
     if (!file.existsSync()) {
@@ -60,9 +69,13 @@ class PubspecConfig {
     return PubspecConfig._(dir, configs);
   }
 
+  /// The directory of the pubspec
   final String pubspecDir;
+
+  /// The list of the registered fonts
   final List<IconFontConfig> fonts;
 
+  /// Resolve the path to the pubspec.yaml
   String resolve(String relative) => p.normalize(p.join(pubspecDir, relative));
 }
 
@@ -89,8 +102,7 @@ YamlList _extractIconFonts(YamlMap yaml) {
 /// Reads `flutter.fonts` and builds a map of family name → asset paths.
 Map<String, List<String>> _extractFamilyAssets(YamlMap yaml) {
   final flutterSection = yaml['flutter'];
-  final fontsList =
-      flutterSection is YamlMap ? flutterSection['fonts'] : null;
+  final fontsList = flutterSection is YamlMap ? flutterSection['fonts'] : null;
   if (fontsList is! YamlList) return {};
 
   final familyToAssets = <String, List<String>>{};
@@ -160,9 +172,7 @@ List<IconFontConfig> _buildFontConfigs(
           ? namingStrategyFromString(namingValue as String)
           : null;
     } on FormatException catch (e) {
-      throw FormatException(
-        '"icon_fonts" entry "naming": ${e.message}',
-      );
+      throw FormatException('"icon_fonts" entry "naming": ${e.message}');
     }
     final useLigaturesValue = entry['useLigatures'];
     if (useLigaturesValue != null && useLigaturesValue is! bool) {

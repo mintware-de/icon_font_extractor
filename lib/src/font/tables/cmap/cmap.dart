@@ -12,10 +12,13 @@ part 'cmap_parser12.dart';
 
 /// Parsed `cmap` table: codepoint -> glyph index.
 class CmapTable {
+  /// Constructor
   CmapTable(this.codepointToGlyph);
 
+  /// The map between codepoints and glyphs
   final Map<int, int> codepointToGlyph;
 
+  /// The reverse map between glyphs to code points
   Map<int, List<int>> get glyphToCodepoints {
     final out = <int, List<int>>{};
     codepointToGlyph.forEach((cp, gid) {
@@ -40,20 +43,21 @@ class CmapTable {
     return 1;
   }
 
-  static CmapTable parse(BinaryReader r) {
-    r.cursor = 0;
-    r.skip(2); // version
-    final numTables = r.readUint16();
+  /// Reads the Cmap table from the [reader].
+  static CmapTable parse(BinaryReader reader) {
+    reader.cursor = 0;
+    reader.skip(2); // version
+    final numTables = reader.readUint16();
 
     final encodingRecords = <_EncodingRecord>[];
     for (var i = 0; i < numTables; i++) {
-      encodingRecords.add(_EncodingRecord.read(r));
+      encodingRecords.add(_EncodingRecord.read(reader));
     }
     encodingRecords.sort((a, b) => b.priority.compareTo(a.priority));
 
     final merged = <int, int>{};
     for (final rec in encodingRecords) {
-      final sub = r.sub(rec.offset);
+      final sub = reader.sub(rec.offset);
       final format = sub.readUint16();
       final parsed = switch (format) {
         0 => _CmapFormat0.parse(sub),

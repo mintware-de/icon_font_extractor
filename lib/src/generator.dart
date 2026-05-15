@@ -7,7 +7,9 @@ import 'font/tables/gsub/gsub.dart';
 import 'font/tables/post.dart';
 import 'font/ttf_parser.dart';
 
+/// A result object for the generation job.
 class GenerationResult {
+  /// Creates the GenerationResult
   GenerationResult({
     required this.familyName,
     required this.outputPath,
@@ -15,15 +17,25 @@ class GenerationResult {
     required this.iconCount,
     required this.warnings,
   });
+
+  /// The name of the font family
   final String familyName;
+
+  /// The output path
   final String outputPath;
+
+  /// The contents
   final String contents;
+
+  /// The number of icons
   final int iconCount;
+
+  /// A list of warnings
   final List<String> warnings;
 }
 
+/// IconFontGenerator
 class IconFontGenerator {
-
   /// Glyph names that are standard placeholders and should never be emitted
   /// as icon constants when using the cmap/post path.
   static const _skippedGlyphNames = {
@@ -36,10 +48,12 @@ class IconFontGenerator {
     'nbspace',
   };
 
-  IconFontGenerator({this.logger = print});
+  /// Constructor
+  IconFontGenerator({void Function(String) logger = print}) : _logger = logger;
 
-  final void Function(String message) logger;
+  final void Function(String message) _logger;
 
+  /// Runs the generator
   List<GenerationResult> run(PubspecConfig config) {
     final results = <GenerationResult>[];
     for (final font in config.fonts) {
@@ -108,7 +122,7 @@ class IconFontGenerator {
         ),
       );
     } else {
-      logger('GSUB table missing for ${font.familyName}; no ligatures found.');
+      _logger('GSUB table missing for ${font.familyName}; no ligatures found.');
     }
 
     final seen = <String>{};
@@ -139,7 +153,7 @@ class IconFontGenerator {
       final post = PostTable.parse(ttf.tableReader('post'), 0);
       glyphNames = post.glyphNames;
     } else {
-      logger(
+      _logger(
         'post table missing for ${font.familyName}; '
         'falling back to hex codepoint names.',
       );

@@ -3,20 +3,26 @@ import '../reader.dart';
 /// Parses the `post` table to recover glyph names. Only used as a diagnostic
 /// fallback — not required for the main code path.
 class PostTable {
+  /// The map of the glyph names
   final Map<int, String> glyphNames;
 
+  /// Constructor
   PostTable(this.glyphNames);
 
-  factory PostTable.parse(BinaryReader r, int numGlyphs) {
-    r.cursor = 0;
-    final version = r.readUint32();
-    r.skip(4 + 2 + 2 + 4 + 16);
+  /// Reads the post table from the [reader]
+  factory PostTable.parse(BinaryReader reader, int numGlyphs) {
+    reader.cursor = 0;
+    final version = reader.readUint32();
+    reader.skip(4 + 2 + 2 + 4 + 16);
 
     final names = <int, String>{};
     if (version == 0x00020000) {
-      final count = r.readUint16();
-      final glyphIndices = List<int>.generate(count, (_) => r.readUint16());
-      final pascalStrings = _readPascalStrings(r);
+      final count = reader.readUint16();
+      final glyphIndices = List<int>.generate(
+        count,
+        (_) => reader.readUint16(),
+      );
+      final pascalStrings = _readPascalStrings(reader);
       for (var gid = 0; gid < count; gid++) {
         final idx = glyphIndices[gid];
         if (idx >= 258) {

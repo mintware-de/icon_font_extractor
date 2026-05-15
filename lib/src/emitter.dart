@@ -1,8 +1,8 @@
 import 'naming.dart';
 import 'naming_strategy.dart';
 
-class GeneratedIcon {
-  GeneratedIcon({
+class _GeneratedIcon {
+  _GeneratedIcon({
     required this.identifier,
     required this.ligature,
     required this.codepoint,
@@ -28,9 +28,9 @@ String emitDartSource({
       .toList();
   final identifiers = deduplicate(rawNames);
 
-  final icons = <GeneratedIcon>[
+  final icons = <_GeneratedIcon>[
     for (var i = 0; i < sortedEntries.length; i++)
-      GeneratedIcon(
+      _GeneratedIcon(
         identifier: identifiers[i],
         ligature: sortedEntries[i].ligature,
         codepoint: sortedEntries[i].codepoint,

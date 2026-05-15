@@ -1,15 +1,23 @@
 import '../../reader.dart';
 
 part 'coverage.dart';
+
 part 'lookup.dart';
+
 part 'extension_subst.dart';
+
 part 'ligature.dart';
 
+/// Represents a single entry of a ligature
 class LigatureEntry {
-  LigatureEntry(this.text, this.glyphId);
-
+  /// The ligature text.
   final String text;
+
+  /// The id of the glyph.
   final int glyphId;
+
+  /// Constructor
+  LigatureEntry(this.text, this.glyphId);
 
   @override
   String toString() => 'LigatureEntry($text -> #$glyphId)';
@@ -17,21 +25,22 @@ class LigatureEntry {
 
 /// Parses LookupType 4 (Ligature Substitution) entries from the GSUB table.
 class GsubTable {
+  /// Reads the ligatures from the [reader].
   static List<LigatureEntry> extractLigatures(
-    BinaryReader r,
+    BinaryReader reader,
     Map<int, List<int>> glyphToCodepoints,
   ) {
-    r.cursor = 0;
-    final majorVersion = r.readUint16();
-    final minorVersion = r.readUint16();
-    r.skip(2); // scriptListOffset
-    r.skip(2); // featureListOffset
-    final lookupListOffset = r.readUint16();
+    reader.cursor = 0;
+    final majorVersion = reader.readUint16();
+    final minorVersion = reader.readUint16();
+    reader.skip(2); // scriptListOffset
+    reader.skip(2); // featureListOffset
+    final lookupListOffset = reader.readUint16();
     if (majorVersion == 1 && minorVersion >= 1) {
-      r.skip(4); // featureVariationsOffset
+      reader.skip(4); // featureVariationsOffset
     }
 
-    final lookupListReader = r.sub(lookupListOffset);
+    final lookupListReader = reader.sub(lookupListOffset);
     final lookupCount = lookupListReader.readUint16();
     final lookupOffsets = List<int>.generate(
       lookupCount,

@@ -47,10 +47,12 @@ void main() {
     });
 
     test('numbers duplicates starting at 2', () {
-      expect(
-        deduplicate(['IcnHome', 'IcnHome', 'IcnHome', 'IcnSearch']),
-        ['IcnHome', 'IcnHome2', 'IcnHome3', 'IcnSearch'],
-      );
+      expect(deduplicate(['IcnHome', 'IcnHome', 'IcnHome', 'IcnSearch']), [
+        'IcnHome',
+        'IcnHome2',
+        'IcnHome3',
+        'IcnSearch',
+      ]);
     });
 
     test('does not affect later distinct names', () {
@@ -67,58 +69,161 @@ void main() {
   group('PascalNamingStrategy', () {
     const s = PascalNamingStrategy();
 
-    test('simple ligature', () => expect(s.toIdentifier('home', 'icn'), 'IcnHome'));
-    test('underscore words', () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'IcnArrowBackIos'));
-    test('dash becomes word boundary', () => expect(s.toIdentifier('arrow-back', 'icn'), 'IcnArrowBack'));
-    test('ALL_CAPS normalized', () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'IcnAddressBook'));
-    test('camelCase boundary split', () => expect(s.toIdentifier('ArrowBack', 'icn'), 'IcnArrowBack'));
+    test(
+      'simple ligature',
+      () => expect(s.toIdentifier('home', 'icn'), 'IcnHome'),
+    );
+    test(
+      'underscore words',
+      () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'IcnArrowBackIos'),
+    );
+    test(
+      'dash becomes word boundary',
+      () => expect(s.toIdentifier('arrow-back', 'icn'), 'IcnArrowBack'),
+    );
+    test(
+      'ALL_CAPS normalized',
+      () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'IcnAddressBook'),
+    );
+    test(
+      'camelCase boundary split',
+      () => expect(s.toIdentifier('ArrowBack', 'icn'), 'IcnArrowBack'),
+    );
     test('empty ligature', () => expect(s.toIdentifier('', 'icn'), 'IcnEmpty'));
-    test('custom prefix', () => expect(s.toIdentifier('home', 'icon'), 'IconHome'));
+    test(
+      'custom prefix',
+      () => expect(s.toIdentifier('home', 'icon'), 'IconHome'),
+    );
     test('empty prefix', () => expect(s.toIdentifier('home', ''), 'Home'));
   });
 
   group('CamelNamingStrategy', () {
     const s = CamelNamingStrategy();
 
-    test('simple ligature', () => expect(s.toIdentifier('home', 'icn'), 'icnHome'));
-    test('underscore words', () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icnArrowBackIos'));
-    test('dash becomes word boundary', () => expect(s.toIdentifier('arrow-back', 'icn'), 'icnArrowBack'));
-    test('ALL_CAPS normalized', () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'icnAddressBook'));
-    test('camelCase boundary split', () => expect(s.toIdentifier('ArrowBack', 'icn'), 'icnArrowBack'));
+    test(
+      'simple ligature',
+      () => expect(s.toIdentifier('home', 'icn'), 'icnHome'),
+    );
+    test(
+      'underscore words',
+      () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icnArrowBackIos'),
+    );
+    test(
+      'dash becomes word boundary',
+      () => expect(s.toIdentifier('arrow-back', 'icn'), 'icnArrowBack'),
+    );
+    test(
+      'ALL_CAPS normalized',
+      () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'icnAddressBook'),
+    );
+    test(
+      'camelCase boundary split',
+      () => expect(s.toIdentifier('ArrowBack', 'icn'), 'icnArrowBack'),
+    );
     test('empty ligature', () => expect(s.toIdentifier('', 'icn'), 'icnEmpty'));
-    test('custom prefix', () => expect(s.toIdentifier('home', 'icon'), 'iconHome'));
-    test('empty prefix', () => expect(s.toIdentifier('arrow_back', ''), 'arrowBack'));
+    test(
+      'custom prefix',
+      () => expect(s.toIdentifier('home', 'icon'), 'iconHome'),
+    );
+    test(
+      'empty prefix',
+      () => expect(s.toIdentifier('arrow_back', ''), 'arrowBack'),
+    );
   });
 
   group('SnakeNamingStrategy', () {
     const s = SnakeNamingStrategy();
 
-    test('simple ligature', () => expect(s.toIdentifier('home', 'icn'), 'icn_home'));
-    test('underscore words', () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icn_arrow_back_ios'));
-    test('dash becomes word boundary', () => expect(s.toIdentifier('arrow-back', 'icn'), 'icn_arrow_back'));
-    test('ALL_CAPS normalized', () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'icn_address_book'));
-    test('camelCase boundary split', () => expect(s.toIdentifier('ArrowBack', 'icn'), 'icn_arrow_back'));
-    test('empty ligature', () => expect(s.toIdentifier('', 'icn'), 'icn_empty'));
-    test('custom prefix', () => expect(s.toIdentifier('home', 'icon'), 'icon_home'));
-    test('empty prefix', () => expect(s.toIdentifier('arrow_back', ''), 'arrow_back'));
+    test(
+      'simple ligature',
+      () => expect(s.toIdentifier('home', 'icn'), 'icn_home'),
+    );
+    test(
+      'underscore words',
+      () =>
+          expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icn_arrow_back_ios'),
+    );
+    test(
+      'dash becomes word boundary',
+      () => expect(s.toIdentifier('arrow-back', 'icn'), 'icn_arrow_back'),
+    );
+    test(
+      'ALL_CAPS normalized',
+      () => expect(s.toIdentifier('ADDRESS-BOOK', 'icn'), 'icn_address_book'),
+    );
+    test(
+      'camelCase boundary split',
+      () => expect(s.toIdentifier('ArrowBack', 'icn'), 'icn_arrow_back'),
+    );
+    test(
+      'empty ligature',
+      () => expect(s.toIdentifier('', 'icn'), 'icn_empty'),
+    );
+    test(
+      'custom prefix',
+      () => expect(s.toIdentifier('home', 'icon'), 'icon_home'),
+    );
+    test(
+      'empty prefix',
+      () => expect(s.toIdentifier('arrow_back', ''), 'arrow_back'),
+    );
   });
 
   group('KeepNamingStrategy', () {
     const s = KeepNamingStrategy();
 
-    test('keeps casing as-is', () => expect(s.toIdentifier('arrowBack', 'icn'), 'icnarrowBack'));
-    test('preserves underscores', () => expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icnarrow_back_ios'));
-    test('replaces invalid chars', () => expect(s.toIdentifier('home-page', 'icn'), 'icnhome_page'));
+    test(
+      'keeps casing as-is',
+      () => expect(s.toIdentifier('arrowBack', 'icn'), 'icnarrowBack'),
+    );
+    test(
+      'preserves underscores',
+      () =>
+          expect(s.toIdentifier('arrow_back_ios', 'icn'), 'icnarrow_back_ios'),
+    );
+    test(
+      'replaces invalid chars',
+      () => expect(s.toIdentifier('home-page', 'icn'), 'icnhome_page'),
+    );
     test('empty ligature', () => expect(s.toIdentifier('', 'icn'), 'icnempty'));
     test('empty prefix', () => expect(s.toIdentifier('home', ''), 'home'));
   });
 
   group('namingStrategyFromString', () {
-    test('pascal', () => expect(namingStrategyFromString('pascal'), isA<PascalNamingStrategy>()));
-    test('camel', () => expect(namingStrategyFromString('camel'), isA<CamelNamingStrategy>()));
-    test('snake', () => expect(namingStrategyFromString('snake'), isA<SnakeNamingStrategy>()));
-    test('keep', () => expect(namingStrategyFromString('keep'), isA<KeepNamingStrategy>()));
-    test('case-insensitive', () => expect(namingStrategyFromString('PASCAL'), isA<PascalNamingStrategy>()));
-    test('unknown throws', () => expect(() => namingStrategyFromString('unknown'), throwsFormatException));
+    test(
+      'pascal',
+      () => expect(
+        namingStrategyFromString('pascal'),
+        isA<PascalNamingStrategy>(),
+      ),
+    );
+    test(
+      'camel',
+      () =>
+          expect(namingStrategyFromString('camel'), isA<CamelNamingStrategy>()),
+    );
+    test(
+      'snake',
+      () =>
+          expect(namingStrategyFromString('snake'), isA<SnakeNamingStrategy>()),
+    );
+    test(
+      'keep',
+      () => expect(namingStrategyFromString('keep'), isA<KeepNamingStrategy>()),
+    );
+    test(
+      'case-insensitive',
+      () => expect(
+        namingStrategyFromString('PASCAL'),
+        isA<PascalNamingStrategy>(),
+      ),
+    );
+    test(
+      'unknown throws',
+      () => expect(
+        () => namingStrategyFromString('unknown'),
+        throwsFormatException,
+      ),
+    );
   });
 }

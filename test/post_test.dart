@@ -24,10 +24,10 @@ void main() {
     });
 
     test('handles glyphs with longer names', () {
-      final table = _buildFormat2(
-        {1: 'arrow_back_ios', 2: 'check_circle_outline'},
-        numGlyphs: 3,
-      );
+      final table = _buildFormat2({
+        1: 'arrow_back_ios',
+        2: 'check_circle_outline',
+      }, numGlyphs: 3);
       expect(table.glyphNames[1], 'arrow_back_ios');
       expect(table.glyphNames[2], 'check_circle_outline');
     });
