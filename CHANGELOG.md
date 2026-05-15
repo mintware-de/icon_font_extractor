@@ -1,3 +1,10 @@
+## 1.1.0
+
+### Non-Ligature Font support
+
+Non-Ligature fonts are now supported. Just add the `useLigatures: false` to the `icon_font_extractor` config and your
+good.
+
 ## 1.0.0
 
 * Initial release.
