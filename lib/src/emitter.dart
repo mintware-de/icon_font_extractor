@@ -1,4 +1,5 @@
 import 'naming.dart';
+import 'package:dart_style/dart_style.dart';
 import 'naming_strategy.dart';
 
 class _GeneratedIcon {
@@ -7,6 +8,7 @@ class _GeneratedIcon {
     required this.ligature,
     required this.codepoint,
   });
+
   final String identifier;
   final String ligature;
   final int codepoint;
@@ -65,7 +67,10 @@ String emitDartSource({
       ..writeln();
   }
   buf.writeln('}');
-  return buf.toString();
+
+  return DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(buf.toString());
 }
 
 String _escapeForDocComment(String s) =>
