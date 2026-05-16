@@ -1,8 +1,14 @@
+## 1.2.0
+
+### Format output
+
+Added the `dart_style` package to format the generated Dart code.
+
 ## 1.1.0
 
 ### Non-Ligature Font support
 
-Non-Ligature fonts are now supported. Just add the `useLigatures: false` to the `icon_font_extractor` config and your
+Non-Ligature fonts are now supported. Just add the `useLigatures: false` to the `icon_font_extractor` config and you're
 good.
 
 ## 1.0.0
